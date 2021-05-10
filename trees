@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node_t{
+	struct node_t* left;
+	struct node_t* right;
+	int data;
+};
+
+struct node_t* create_new(int data){
+	struct node_t* new_node = malloc(sizeof(struct node_t));
+
+	new_node->right = NULL;
+	new_node->left = NULL;
+	new_node->data = data;
+
+	return new_node;
+}
+
+void add_leaf(struct node_t *root, int data){
+	if(data < root->data){
+		if(root->left == NULL){
+		struct node_t* new_node = create_new(data);
+		root->left = new_node;
+		}
+
+		else add_leaf(root->left, data);
+	}
+
+	if(data > root->data){
+		if(root->right == NULL){
+		struct node_t* new_node = create_new(data);
+		root->right = new_node;
+		}
+
+		else add_leaf(root->right, data);
+	}
+}
+
+void print_tree(struct node_t *root){
+	if(root == NULL){
+		printf("-----");
+		return;
+	}
+	printf("%d\n", root->data);
+	print_tree(root->left);
+
+	print_tree(root->right);
+	}
+
+void free_tree(struct node_t *root){
+	if(root == NULL){
+		return;
+	}
+
+	free_tree(root->left);
+	free_tree(root->right);
+
+	free(root);
+}
+
+int main(){
+	struct node_t root = create_new(8);
+	add_leaf(&root, 6);
+	add_leaf(&root, 4);
+	add_leaf(&root, 11);
+	add_leaf(&root, 9);
+	print_tree(&root);
+	free_tree(&root);
+	return 0;
+}
